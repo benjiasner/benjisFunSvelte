@@ -12,9 +12,10 @@
     let orientX = 0;
     let orientY = 0;
     let orientZ = 0;
-    let colorTorus = 'gray'
-    let colorsArrows = ['gray', 'gray', 'gray']
-    const rotationSpeed = 0.05; // Adjust for desired smoothness
+    let colorTorus = 'gray';
+    let colorsArrows = ['gray', 'gray', 'gray'];
+    const rotationSpeed = 0.1; // Adjust for desired smoothness
+    let clickToggle = true;
 
     function resetAxes() {
         // Reset the target rotation to the current rotation
@@ -30,21 +31,30 @@
     }
 
     function rotateX(){
-        resetAxes();
-        targetX += Math.PI / 2;
-        console.log('orientX')
+        if (clickToggle) {
+            resetAxes();
+            targetX += Math.PI / 2;
+            clickToggle = false; // Prevent further clicks until rotation completes
+            console.log('orientX');
+        }
     }
 
     function rotateY(){
-        resetAxes();
-        targetY += Math.PI / 2;
-        console.log('orientY')
+        if (clickToggle) {
+            resetAxes();
+            targetY += Math.PI / 2;
+            clickToggle = false; // Prevent further clicks until rotation completes
+            console.log('orientY');
+        }
     }
 
     function rotateZ(){
-        resetAxes();
-        targetZ += Math.PI / 2;
-        console.log('orientZ')
+        if (clickToggle) {
+            resetAxes();
+            targetZ += Math.PI / 2;
+            clickToggle = false; // Prevent further clicks until rotation completes
+            console.log('orientZ');
+        }
     }
 
     function hoverOnObject(){
@@ -64,7 +74,7 @@
 
     function hoverOffArrow(arrowIndex){
         colorsArrows[arrowIndex] = 'gray';
-        console.log('hovered on arrow');
+        console.log('hovered off arrow');
     }
 
     useFrame(() => {
@@ -72,6 +82,16 @@
         orientX += (targetX - orientX) * rotationSpeed;
         orientY += (targetY - orientY) * rotationSpeed;
         orientZ += (targetZ - orientZ) * rotationSpeed;
+
+        // Check if rotation is complete
+        if (Math.abs(orientX - targetX) < 0.01 &&
+            Math.abs(orientY - targetY) < 0.01 &&
+            Math.abs(orientZ - targetZ) < 0.01) {
+            orientX = targetX;
+            orientY = targetY;
+            orientZ = targetZ;
+            clickToggle = true; // Allow next rotation
+        }
     });
 </script>
 
@@ -118,6 +138,5 @@
         <T.MeshStandardMaterial roughness={0} color={colorsArrows[2]} metalness={'1'}/>
     </T.Mesh>
 {/if}
-
 
 <T.GridHelper />
