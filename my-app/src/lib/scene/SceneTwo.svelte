@@ -97,24 +97,24 @@
             orientY = targetY;
             orientZ = targetZ;
             clickToggle = true; // Allow next rotation
+        }
 
-            // Update torusMesh's matrixWorld
-            if (torusMesh) {
-                torusMesh.rotation.set(orientX, orientY, orientZ);
-                torusMesh.updateMatrixWorld();
+        // Update torusMesh's matrixWorld and adjust position
+        if (torusMesh) {
+            torusMesh.rotation.set(orientX, orientY, orientZ);
+            torusMesh.updateMatrixWorld();
 
-                // Compute and adjust the bounding box
-                if (torusMesh.geometry) {
-                    torusMesh.geometry.computeBoundingBox();
-                    boundingBox = torusMesh.geometry.boundingBox.clone().applyMatrix4(torusMesh.matrixWorld);
+            // Compute and adjust the bounding box
+            if (torusMesh.geometry) {
+                torusMesh.geometry.computeBoundingBox();
+                boundingBox = torusMesh.geometry.boundingBox.clone().applyMatrix4(torusMesh.matrixWorld);
 
-                    // Calculate the offset needed to move the lowest point to y = 0
-                    const minY = boundingBox.min.y;
-                    const offsetY = -minY;
+                // Calculate the offset needed to move the lowest point to y = 0
+                const minY = boundingBox.min.y;
+                const offsetY = -minY;
 
-                    // Adjust the torus position
-                    posY += offsetY;
-                }
+                // Adjust the torus position
+                posY += offsetY;
             }
         }
     });
@@ -168,3 +168,4 @@
 {/if}
 
 <T.GridHelper />
+
