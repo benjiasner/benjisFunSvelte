@@ -18,6 +18,8 @@
     let colorsArrows = ['gray', 'gray', 'gray'];
     const rotationSpeed = 0.1; // Adjust for desired smoothness
     let clickToggle = true;
+    var meshHolder;
+    let clickCooldown = false;
 
     // Reference to the torus mesh
     let torusMesh;
@@ -31,10 +33,16 @@
     }
 
     function toggleOrientationView() {
+    if (!clickCooldown) {
         orientationViewToggle = !orientationViewToggle;
         clickCounter += 1;
         console.log('orientation view toggle clicked number of times ' + clickCounter);
+        clickCooldown = true;
+        setTimeout(() => {
+            clickCooldown = false;
+        }, 300); // Cooldown period in milliseconds
     }
+}
 
     function rotateX(){
         if (clickToggle && torusMesh) {
@@ -83,7 +91,14 @@
         console.log('hovered off arrow');
     }
 
-    useFrame(() => {
+    function applyUpdates() {
+        meshHolder = new THREE.Object3D;
+        meshHolder.add(torusMesh);
+        //apply rotations
+        torusMesh = meshHolder;
+    }
+
+    useFrame(() => {        
         // Smoothly interpolate rotation values towards the target
         orientX += (targetX - orientX) * rotationSpeed;
         orientY += (targetY - orientY) * rotationSpeed;
@@ -96,6 +111,7 @@
             orientX = targetX;
             orientY = targetY;
             orientZ = targetZ;
+
             clickToggle = true; // Allow next rotation
         }
 
