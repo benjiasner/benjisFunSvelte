@@ -1,6 +1,7 @@
 <script>
     import { T, useFrame } from '@threlte/core';
     import { OrbitControls, Sky, interactivity } from '@threlte/extras';
+    import * as THREE from 'three';
 
     interactivity();
 
@@ -16,6 +17,11 @@
     let colorsArrows = ['gray', 'gray', 'gray'];
     const rotationSpeed = 0.1; // Adjust for desired smoothness
     let clickToggle = true;
+
+    // Reference to the torus mesh
+    let torusMesh;
+    let boundingBox;
+    
 
     function resetAxes() {
         // Reset the target rotation to the current rotation
@@ -35,7 +41,19 @@
             resetAxes();
             targetX += Math.PI / 2;
             clickToggle = false; // Prevent further clicks until rotation completes
-            console.log('orientX');
+            console.log('rotateX');
+
+            // Check if torusMesh and its geometry are available
+            if (torusMesh && torusMesh.geometry) {
+                torusMesh.geometry.computeBoundingBox();
+                boundingBox = torusMesh.geometry.boundingBox;
+                if (boundingBox) {
+                    boundingBox = boundingBox.copy( torusMesh.geometry.boundingBox ).applyMatrix4( torusMesh.matrixWorld );
+                    console.log(boundingBox);
+                }
+            } else {
+                console.warn("Torus mesh or its geometry is not available yet.");
+            }
         }
     }
 
@@ -44,7 +62,7 @@
             resetAxes();
             targetY += Math.PI / 2;
             clickToggle = false; // Prevent further clicks until rotation completes
-            console.log('orientY');
+            console.log('rotateY');
         }
     }
 
@@ -53,7 +71,7 @@
             resetAxes();
             targetZ += Math.PI / 2;
             clickToggle = false; // Prevent further clicks until rotation completes
-            console.log('orientZ');
+            console.log('rotateZ');
         }
     }
 
@@ -101,39 +119,42 @@
 
 <Sky />
 
-<T.Mesh position={[0, 1, 0]} 
-        rotation={[orientX, orientY, orientZ]} 
-        on:click={() => {toggleOrientationView()}}
-        on:pointerover={() => {hoverOnObject()}}
-        on:pointerout={() => {hoverOffObject()}}>
-    <T.TorusKnotGeometry />
-    <T.MeshStandardMaterial roughness={0} color={colorTorus} metalness={'1'}/>
-</T.Mesh>
+<T.Group>
+    <T.Mesh bind:ref={torusMesh}
+            position={[0, 1, 0]} 
+            rotation={[orientX, orientY, orientZ]} 
+            on:click={toggleOrientationView}
+            on:pointerover={hoverOnObject}
+            on:pointerout={hoverOffObject}>
+        <T.TorusKnotGeometry />
+        <T.MeshStandardMaterial roughness={0} color={colorTorus} metalness={'1'}/>
+    </T.Mesh>
+</T.Group>
 
 {#if orientationViewToggle}
     <T.Mesh position={[0, 5, 0]} 
             rotation={[Math.PI / 2, 0, 0]} 
-            on:click={() => {rotateX()}}
-            on:pointerover={() => {hoverOnArrow(0)}}
-            on:pointerout={() => {hoverOffArrow(0)}}>
+            on:click={rotateX}
+            on:pointerover={() => hoverOnArrow(0)}
+            on:pointerout={() => hoverOffArrow(0)}>
         <T.ConeGeometry args={[.2, 1, 40]}/>
         <T.MeshStandardMaterial roughness={0} color={colorsArrows[0]} metalness={'1'}/>
     </T.Mesh>
 
     <T.Mesh position={[0, 0, 5]} 
             rotation={[Math.PI / 2, 0, - Math.PI / 2]} 
-            on:click={() => {rotateY()}}
-            on:pointerover={() => {hoverOnArrow(1)}}
-            on:pointerout={() => {hoverOffArrow(1)}}>
+            on:click={rotateY}
+            on:pointerover={() => hoverOnArrow(1)}
+            on:pointerout={() => hoverOffArrow(1)}>
         <T.ConeGeometry args={[.2, 1, 40]}/>
         <T.MeshStandardMaterial roughness={0} color={colorsArrows[1]} metalness={'1'}/>
     </T.Mesh>
 
     <T.Mesh position={[5, 0, 0]} 
             rotation={[Math.PI, 0, Math.PI]} 
-            on:click={() => {rotateZ()}}
-            on:pointerover={() => {hoverOnArrow(2)}}
-            on:pointerout={() => {hoverOffArrow(2)}}>
+            on:click={rotateZ}
+            on:pointerover={() => hoverOnArrow(2)}
+            on:pointerout={() => hoverOffArrow(2)}>
         <T.ConeGeometry args={[.2, 1, 40]}/>
         <T.MeshStandardMaterial roughness={0} color={colorsArrows[2]} metalness={'1'}/>
     </T.Mesh>
