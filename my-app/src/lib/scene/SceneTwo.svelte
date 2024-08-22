@@ -13,6 +13,7 @@
     let orientX = 0;
     let orientY = 0;
     let orientZ = 0;
+    let posY = 0;
     let colorTorus = 'gray';
     let colorsArrows = ['gray', 'gray', 'gray'];
     const rotationSpeed = 0.1; // Adjust for desired smoothness
@@ -22,7 +23,6 @@
     let torusMesh;
     let boundingBox;
     
-
     function resetAxes() {
         // Reset the target rotation to the current rotation
         targetX = orientX;
@@ -37,28 +37,16 @@
     }
 
     function rotateX(){
-        if (clickToggle) {
+        if (clickToggle && torusMesh) {
             resetAxes();
             targetX += Math.PI / 2;
             clickToggle = false; // Prevent further clicks until rotation completes
             console.log('rotateX');
-
-            // Check if torusMesh and its geometry are available
-            if (torusMesh && torusMesh.geometry) {
-                torusMesh.geometry.computeBoundingBox();
-                boundingBox = torusMesh.geometry.boundingBox;
-                if (boundingBox) {
-                    boundingBox = boundingBox.copy( torusMesh.geometry.boundingBox ).applyMatrix4( torusMesh.matrixWorld );
-                    console.log(boundingBox);
-                }
-            } else {
-                console.warn("Torus mesh or its geometry is not available yet.");
-            }
         }
     }
 
     function rotateY(){
-        if (clickToggle) {
+        if (clickToggle && torusMesh) {
             resetAxes();
             targetY += Math.PI / 2;
             clickToggle = false; // Prevent further clicks until rotation completes
@@ -67,7 +55,7 @@
     }
 
     function rotateZ(){
-        if (clickToggle) {
+        if (clickToggle && torusMesh) {
             resetAxes();
             targetZ += Math.PI / 2;
             clickToggle = false; // Prevent further clicks until rotation completes
@@ -109,6 +97,25 @@
             orientY = targetY;
             orientZ = targetZ;
             clickToggle = true; // Allow next rotation
+
+            // Update torusMesh's matrixWorld
+            if (torusMesh) {
+                torusMesh.rotation.set(orientX, orientY, orientZ);
+                torusMesh.updateMatrixWorld();
+
+                // Compute and adjust the bounding box
+                if (torusMesh.geometry) {
+                    torusMesh.geometry.computeBoundingBox();
+                    boundingBox = torusMesh.geometry.boundingBox.clone().applyMatrix4(torusMesh.matrixWorld);
+
+                    // Calculate the offset needed to move the lowest point to y = 0
+                    const minY = boundingBox.min.y;
+                    const offsetY = -minY;
+
+                    // Adjust the torus position
+                    posY += offsetY;
+                }
+            }
         }
     });
 </script>
@@ -121,7 +128,7 @@
 
 <T.Group>
     <T.Mesh bind:ref={torusMesh}
-            position={[0, 1, 0]} 
+            position={[0, posY, 0]} 
             rotation={[orientX, orientY, orientZ]} 
             on:click={toggleOrientationView}
             on:pointerover={hoverOnObject}
