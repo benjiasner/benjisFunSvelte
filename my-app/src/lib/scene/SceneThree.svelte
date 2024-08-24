@@ -4,14 +4,10 @@
     import * as THREE from 'three';
 
     let torusMesh;
-    let camera;
-
-
-
     
 </script>
 
-<T.PerspectiveCamera bind:ref={camera} makeDefault position={[10, 10, 10]} zoom={2} fov={80}>
+<T.PerspectiveCamera makeDefault position={[10, 10, 10]} zoom={2} fov={80}>
     <OrbitControls autoRotate enableDamping autoRotateSpeed={0}/>
 </T.PerspectiveCamera>
 
