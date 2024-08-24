@@ -17,4 +17,9 @@
             <a href="/transformControls">Using Transform Controls</a>
         </div>
     </li>
+    <li>
+        <div>
+            <a href="/refactor">Refactor button reassignment</a>
+        </div>
+    </li>
 </ul>
