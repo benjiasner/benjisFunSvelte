@@ -7,7 +7,7 @@
     import * as THREE from 'three';
 
     //TODO
-    // - add centering after each move
+    // - add centering after each move (not just click like now)
     // - figure out the y=0 problem
     // - 
 
@@ -16,33 +16,51 @@
     let torusMesh;
     let clickCooldown = false;
     let transformCntlsEnabled = false;
-    let objectColor;
-    let hoverOnTransCntls = 
+    let objectColor = "gray";
+    let hoverOnTransCntls = false;
+    let posY = 0;
+
+    // Ensure the torus is flush with the y=0 plane
+    function updateTorusPosition() {
+        if (torusMesh.geometry) {
+            torusMesh.geometry.computeBoundingBox();
+            const boundingBox = torusMesh.geometry.boundingBox.clone().applyMatrix4(torusMesh.matrixWorld);
+
+            // Calculate the offset needed to move the lowest point to y = 0
+            const minY = boundingBox.min.y;
+            const offsetY = -minY;
+
+            // Adjust the torus position
+            posY += offsetY;
+        }
+    }
 
     function clickOnObject(){
         if (!clickCooldown){
             transformCntlsEnabled = !transformCntlsEnabled;
-            console.log('clicked on object')
+            console.log('clicked on object');
             clickCooldown = true;
             setTimeout(() => {
                 clickCooldown = false;
             }, 300); // Cooldown period in milliseconds
+
+            // Update the torus position to ensure it stays flush with y=0
+            updateTorusPosition();
         }
     }
 
     function hoverOnObject(){
-        objectColor="blue";
+        objectColor = "blue";
         console.log('hovered on object');
     }
 
     function hoverOffObject(){
-        objectColor="gray"
-        console.log('hovered off object')
+        objectColor = "gray";
+        console.log('hovered off object');
     }
 
     function hoverOnTransformControls() {
-        
-        console.log('hovered on transform controls')
+        console.log('hovered on transform controls');
     }
     
 </script>
@@ -57,7 +75,7 @@
     mode="rotate"
     rotationSnap={Math.PI / 2}
     size={1}
-    position={[0,0,0]}
+    position={[0, posY, 0]}
     enabled={transformCntlsEnabled}
     showX={transformCntlsEnabled}
     showY={transformCntlsEnabled}
@@ -70,6 +88,7 @@
             on:click={clickOnObject}
             on:pointerover={hoverOnObject}
             on:pointerout={hoverOffObject}
+            on:mounted={updateTorusPosition}
     >
         <T.TorusKnotGeometry />
         <T.MeshStandardMaterial roughness={0} color={objectColor} metalness={'1'}/>
