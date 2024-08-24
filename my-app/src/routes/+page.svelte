@@ -12,4 +12,9 @@
             <a href="/importingSTL">Importing and Viewing an STL in Threlte</a>
         </div>
     </li>
+    <li>
+        <div>
+            <a href="/transformControls">Using Transform Controls</a>
+        </div>
+    </li>
 </ul>
