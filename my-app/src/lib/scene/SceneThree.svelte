@@ -16,9 +16,11 @@
 <TransformControls 
     mode="rotate"
     rotationSnap={Math.PI / 2}
+    size={2}
+    position={[0,3,0]}
 >
     <T.Mesh bind:ref={torusMesh}
-            position={[0, 1, 0]}>
+            position={[0, -1, 0]}>
         <T.TorusKnotGeometry />
         <T.MeshStandardMaterial roughness={0} color={'gray'} metalness={'1'}/>
     </T.Mesh>
