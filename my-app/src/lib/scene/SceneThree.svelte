@@ -7,9 +7,7 @@
     import * as THREE from 'three';
 
     //TODO
-    // - add centering after each move (not just click like now)
-    // - figure out the y=0 problem
-    // - 
+    // 
 
     interactivity();
 
@@ -19,6 +17,7 @@
     let objectColor = "gray";
     let hoverOnTransCntls = false;
     let posY = 0;
+    let boundingBox;
 
     // Ensure the torus is flush with the y=0 plane
     function updateTorusPosition() {
@@ -45,7 +44,7 @@
             }, 300); // Cooldown period in milliseconds
 
             // Update the torus position to ensure it stays flush with y=0
-            updateTorusPosition();
+            //updateTorusPosition();
         }
     }
 
@@ -59,7 +58,18 @@
         console.log('hovered off object');
     }
 
+    function clickOnTransformControls() {
+        updateTorusPosition();
+        console.log('clicked on transform controls')
+    }
+
     function hoverOnTransformControls() {
+        updateTorusPosition();
+        console.log('hovered on transform controls');
+    }
+
+    function hoverOffTransformControls() {
+        updateTorusPosition();
         console.log('hovered on transform controls');
     }
     
@@ -80,7 +90,7 @@
     showX={transformCntlsEnabled}
     showY={transformCntlsEnabled}
     showZ={transformCntlsEnabled}
-    on:pointerover={hoverOnTransformControls}
+    on:pointerout={hoverOffTransformControls}
 >
 
     <T.Mesh bind:ref={torusMesh}
