@@ -17,4 +17,9 @@
             <a href="/transformControls">Using Transform Controls</a>
         </div>
     </li>
+    <li>
+        <div>
+            <a href="/quaternions">Quaternions</a>
+        </div>
+    </li>
 </ul>
