@@ -1,6 +1,6 @@
 <script>
     import { T, useFrame } from '@threlte/core';
-    import { OrbitControls, Sky, interactivity } from '@threlte/extras';
+    import { OrbitControls, Sky, interactivity, Stars } from '@threlte/extras';
     import * as THREE from 'three';
 
     interactivity();

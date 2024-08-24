@@ -3,6 +3,7 @@
     import { OrbitControls, 
             TransformControls, 
             Sky, 
+            Stars,
             interactivity } from '@threlte/extras';
     import * as THREE from 'three';
 
