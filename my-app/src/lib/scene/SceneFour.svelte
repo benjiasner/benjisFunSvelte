@@ -10,9 +10,9 @@
     let clickCooldown = false;
     let colorsArrows = ["gray", "gray", "gray"]
 
-    const quaternionX = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI / 4);
-    const quaternionY = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 4);
-    const quaternionZ = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 0, 1), Math.PI / 4);
+    const quaternionX = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI / 2);
+    const quaternionY = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 2);
+    const quaternionZ = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 0, 1), Math.PI / 2);
 
     function toggleOrientationView() {
         orientationViewToggle = !orientationViewToggle;
@@ -23,8 +23,6 @@
         if (torusMesh) {
             torusMesh.quaternion.multiplyQuaternions(quaternionX, torusMesh.quaternion);
             torusMesh.quaternion.normalize();
-            torusMesh.quaternion.multiplyQuaternions(quaternionX, torusMesh.quaternion);
-            torusMesh.quaternion.normalize();
             console.log("appliedX")
         }
     }
@@ -33,16 +31,12 @@
         if (torusMesh) {
             torusMesh.quaternion.multiplyQuaternions(quaternionY, torusMesh.quaternion);
             torusMesh.quaternion.normalize();
-            torusMesh.quaternion.multiplyQuaternions(quaternionY, torusMesh.quaternion);
-            torusMesh.quaternion.normalize();
             console.log("appliedY")
         }
     }
 
     function rotateZ() {
         if (torusMesh) {
-            torusMesh.quaternion.multiplyQuaternions(quaternionZ, torusMesh.quaternion);
-            torusMesh.quaternion.normalize();
             torusMesh.quaternion.multiplyQuaternions(quaternionZ, torusMesh.quaternion);
             torusMesh.quaternion.normalize();
             console.log("appliedZ")
@@ -75,7 +69,7 @@
     <T.Mesh bind:ref={torusMesh}
             position={[0, 0, 0]} 
             on:click={toggleOrientationView}>
-        <T.ConeGeometry />
+        <T.TorusKnotGeometry />
         <T.MeshStandardMaterial roughness={0} color="gray" metalness={1} />
     </T.Mesh>
 </T.Group>
