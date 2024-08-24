@@ -19,6 +19,11 @@
     </li>
     <li>
         <div>
+            <a href="/refactor">Refactor button reassignment</a>
+        </div>
+    </li>
+    <li>
+        <div>
             <a href="/quaternions">Quaternions</a>
         </div>
     </li>
