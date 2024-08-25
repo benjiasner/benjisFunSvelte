@@ -126,7 +126,7 @@
                 interpolated_quaternion.z,
                 interpolated_quaternion.w,
             );
-            curr_interpolation_param += 0.0001;
+            curr_interpolation_param += 0.01;
         }
 
         if (curr_interpolation_param > 1) {
