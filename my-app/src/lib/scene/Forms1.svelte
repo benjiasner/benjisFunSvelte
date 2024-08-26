@@ -4,6 +4,8 @@
     let subject = '';
     let message = '';
 
+    // HOW TO: https://github.com/levinunnink/html-form-to-google-sheet
+
     // Web app URL
     const scriptURL = "https://script.google.com/macros/s/AKfycbxQ0TvOE375NIuuO1w0T6tnJBHYiN1aC9OaPEA5XfoElmu6s1clrokVBGjKNA5j1w8j/exec";
 
