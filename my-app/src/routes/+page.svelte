@@ -27,6 +27,11 @@
             <a href="/quaternions">Quaternions</a>
         </div>
     </li>
+    <li>
+        <div>
+            <a href="/menu1">Menu</a>
+        </div>
+    </li>
 </ul>
 <h2>Playing with Forms Projects</h2>
 <ul>
