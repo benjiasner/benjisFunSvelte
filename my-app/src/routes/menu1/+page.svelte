@@ -21,7 +21,7 @@
         </div>
     </div>
     <!-- Add a button to toggle the menu -->
-    <button class="toggle-button" on:click={toggleMenu}>
+    <button class="toggle-button {isMenuOpen ? 'menu-open' : ''}" on:click={toggleMenu}>
         {isMenuOpen ? '<' : '>'}
     </button>
 </main>
@@ -78,7 +78,7 @@
     .toggle-button {
         position: absolute;
         top: 20px;
-        left: 20px;
+        left: 20px; /* Default position when menu is closed */
         z-index: 100;
         padding: 10px;
         background-color: #007bff;
@@ -86,6 +86,12 @@
         border: none;
         border-radius: 5px;
         cursor: pointer;
+        transition: left 0.3s ease-in-out; /* Smooth transition for button movement */
+    }
+
+    /* Move the button to the right of the menu when open */
+    .toggle-button.menu-open {
+        left: 420px; /* 400px (menu width) + 20px (margin) */
     }
 
     .toggle-button:hover {
