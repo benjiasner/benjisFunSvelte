@@ -4,6 +4,16 @@
 <ul>
     <li>
         <div>
+            <a href="/signin">Sign in</a>
+        </div>
+    </li>
+    <li>
+        <div>
+            <a href="/register">Sign up</a>
+        </div>
+    </li>
+    <li>
+        <div>
             <a href="/gettingStarted">Getting Started in Threlte</a>
         </div>
     </li>

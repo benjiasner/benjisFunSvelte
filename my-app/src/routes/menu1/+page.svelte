@@ -59,7 +59,7 @@
     }
 
     .menu.open {
-        width: 400px; /* Width when open */
+        width: 350px; /* Width when open */
     }
 
     /* Canvas wrapper styles */
@@ -71,7 +71,7 @@
 
     /* Adjust canvas width when menu is open */
     .container.menu-open .canvas-wrapper {
-        width: calc(100% - 400px); /* Shrink canvas to make space for the menu */
+        width: calc(100% - 350px); /* Shrink canvas to make space for the menu */
     }
 
     /* Add styles for the toggle button */
@@ -81,7 +81,7 @@
         left: 20px; /* Default position when menu is closed */
         z-index: 100;
         padding: 10px;
-        background-color: #007bff;
+        background-color: rgba(0, 0, 0, 0.8);
         color: white;
         border: none;
         border-radius: 5px;
@@ -91,10 +91,10 @@
 
     /* Move the button to the right of the menu when open */
     .toggle-button.menu-open {
-        left: 420px; /* 400px (menu width) + 20px (margin) */
+        left: 370px; /* 400px (menu width) + 20px (margin) */
     }
 
     .toggle-button:hover {
-        background-color: #0056b3;
+        background-color: rgba(0, 0, 0, 0.5);
     }
 </style>

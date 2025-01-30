@@ -3,14 +3,13 @@
 </script>
 
 <div class="menu {isOpen ? 'open' : ''}">
-    <h2>Menu</h2>
-    <p>This is the menu content.</p>
+
 
     <!-- Buttons at the bottom of the menu -->
     <div class="buttons">
         <button>Home</button>
         <button>Search</button>
-        <button>Your Library</button>
+        <button>Library</button>
         <button>Devices</button>
         <button>Profile</button>
     </div>
@@ -29,15 +28,15 @@
     }
 
     .menu.open {
-        width: 400px;
+        width: 350px;
     }
 
     .buttons {
         margin-top: auto; /* Push buttons to the bottom */
-        padding: 20px;
+        padding: 10px;
         display: flex;
         flex-direction: row;
-        gap: 10px; /* Space between buttons */
+        gap: 7px; /* Space between buttons */
     }
 
     .buttons button {
