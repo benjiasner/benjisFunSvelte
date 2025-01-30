@@ -1,4 +1,28 @@
-<h1>Welcome to your svelte tester and development site, Benji</h1>
+<script>
+
+    import { onMount } from 'svelte';
+
+    let username = ''
+
+    onMount(async () => {
+        const endpoint = 'http://localhost:8000/api/user/';
+        const response = await fetch(endpoint, {
+            headers: {'Content-Type': 'application/json'},
+            credentials: 'include',
+        });
+
+        let const_content = await response.json();
+        console.log(const_content);
+        username = const_content.username;
+    });
+
+</script>
+
+{#if username}
+    <h1>Welcome to your svelte tester and development site, {username}</h1>
+{:else}
+    <h1>Welcome to your svelte tester and development site.</h1>
+{/if}
 <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
 <h2>Threlte Projects</h2>
 <ul>
