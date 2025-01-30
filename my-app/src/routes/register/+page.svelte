@@ -6,37 +6,6 @@
     let errorMessage = '';
     let successMessage = '';
 
-    // async function signUp(username, password, email) {
-    //     console.log(username);
-    //     console.log(password);
-
-    //     if (password !== confirmPassword) {
-    //         errorMessage = "Passwords do not match!";
-    //         return;
-    //     }
-    //     if (!username || !email || !password) {
-    //         errorMessage = "Please fill in all fields.";
-    //         return;
-    //     }
-
-    //     const response = await fetch('http://localhost:8000/api/register/', {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify({ username: username, password: password }),
-    //     });
-
-    //     if (!response.ok) {
-    //         // Handle error response
-    //         const errorData = await response.json();
-    //         console.error('Error signing up:', errorData);
-    //     }
-
-    //     const data = await response.json();
-    //     return data;
-    // }
-
     let signUp = () => {
         const endpoint = 'http://localhost:8000/api/register/';
         const requestOptions = {
