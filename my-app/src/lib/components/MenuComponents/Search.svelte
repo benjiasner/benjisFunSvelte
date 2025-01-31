@@ -1,10 +1,12 @@
-<script>
+<script lang="ts">
     import { onMount } from "svelte";
+    import { selectedFileEntityId } from "../../stores";
   
     let searchQuery = ""; // Holds the search input value
     let files = []; // Holds the list of 3D files
     let isLoading = false; // Loading state
     let error = null; // Error state
+    let selectedFile = null;
   
     // Function to fetch 3D files from the API
     async function fetchFiles() {
@@ -14,7 +16,7 @@
         try {
             const response = await fetch(`http://127.0.0.1:8000/api/3d-files/?search=${searchQuery}`);
             if (!response.ok) {
-            throw new Error("Failed to fetch 3D files");
+                throw new Error("Failed to fetch 3D files");
             }
             files = await response.json();
         } catch (err) {
@@ -30,8 +32,13 @@
     });
   
     // Fetch files whenever the search query changes
-    $: {
-      fetchFiles();
+    $: if (searchQuery !== undefined) {
+        fetchFiles();
+    }
+
+    function selectFile(file) {
+        selectedFile = file;
+        selectedFileEntityId.set(file.entity);
     }
   </script>
   
@@ -55,7 +62,10 @@
       <!-- File List -->
       <div class="file-list">
         {#each files as file}
-          <div class="file-item">
+          <div 
+            class="file-item {selectedFile === file ? 'selected': ''}"
+            on:click={() => selectFile(file)}
+            >
             <div class="file-name">{file.three_d_file_name}</div>
             <div class="file-description">{file.three_d_file_description}</div>
             <div>Added by: {file.username_added}</div>
@@ -85,7 +95,7 @@
     }
   
     .file-list {
-      max-height: 400px;
+      max-height: 300px;
       overflow-y: auto;
       border: 1px solid #ccc;
       border-radius: 4px;
@@ -118,5 +128,11 @@
     .error {
       color: red;
       text-align: center;
+    }
+
+    /* Highlight selected file */
+    .file-item.selected {
+        background-color: #f0f0f0;
+        border-left: 5px solid #007bff;
     }
   </style>

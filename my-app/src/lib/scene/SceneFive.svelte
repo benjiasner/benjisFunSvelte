@@ -2,15 +2,29 @@
     import { T, useLoader } from '@threlte/core';
     import { OrbitControls, Sky } from '@threlte/extras';
     import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
+    import { selectedFileEntityId } from '../stores'
 
     // Use the STLLoader with useLoader
-    const { load } = useLoader(STLLoader);
+
+    let model;
+
+    // $: {
+    //     console.log($selectedFileEntityId);
+    // }
+
+    $: if ($selectedFileEntityId) {
+        const { load } = useLoader(STLLoader);
+        load(`http://localhost:8000/api/get-3d-file/${$selectedFileEntityId}`).then(loadedModel => {
+            model = loadedModel;
+        }).catch(error => {
+            console.error(`Failed to load model: /${$selectedFileEntityId}`, error);
+        });
+    }
 
     // Load the STL model
-    let model;
-    load('/3dModel/crown.STL').then((geometry) => {
-        model = geometry; // Store the loaded geometry
-    });
+    // load('/3dModel/crown.STL').then((geometry) => {
+    //     model = geometry; // Store the loaded geometry
+    // });
 </script>
 
 <T.PerspectiveCamera makeDefault position={[10, 10, 10]} zoom={2} fov={80}>
