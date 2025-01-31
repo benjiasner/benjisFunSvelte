@@ -1,19 +1,35 @@
 <script>
     import Search from '../components/MenuComponents/Search.svelte'
+    import Home from '../components/MenuComponents/Home.svelte'
+    import Library from '../components/MenuComponents/Library.svelte'
     export let isOpen = false;
+    let menuItem = 'Home';
+
+    function toggleMenuItem(newItem) {
+        menuItem = newItem;
+    };
 </script>
 
 <div class="menu {isOpen ? 'open' : ''}">
 
-    <Search />
+    {#if menuItem === 'Home'}
+        <Home />
+    {:else if menuItem === 'Search'}
+        <Search />
+    {:else if menuItem === 'Library'}
+        <Library />
+    {:else if menuItem === 'Devices'}
 
+    {:else if menuItem === 'Profile'}
+
+    {/if}
     <!-- Buttons at the bottom of the menu -->
     <div class="buttons">
-        <button>Home</button>
-        <button>Search</button>
-        <button>Library</button>
-        <button>Devices</button>
-        <button>Profile</button>
+        <button on:click={() => toggleMenuItem('Home')}>Home</button>
+        <button on:click={() => toggleMenuItem('Search')}>Search</button>
+        <button on:click={() => toggleMenuItem('Library')}>Library</button>
+        <button on:click={() => toggleMenuItem('Devices')}>Devices</button>
+        <button on:click={() => toggleMenuItem('Profile')}>Profile</button>
     </div>
 </div>
 

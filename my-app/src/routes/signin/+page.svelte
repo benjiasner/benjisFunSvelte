@@ -18,9 +18,9 @@
         fetch(endpoint, requestOptions)
             .then(response => response.json())
             .then(data => {
-                console.log(data)
+              localStorage.setItem('jwt', data.jwt);
             })
-        }
+      }
 
 
   </script>
