@@ -3,52 +3,23 @@
     import { selectedFileEntityId } from "../../stores";
   
     let searchQuery = ""; // Holds the search input value
-    let files = []; // Holds the list of 3D files
+    let lists = []; // Holds the list of lists (e.g., "Likes")
     let isLoading = false; // Loading state
     let error = null; // Error state
     let selectedFile = null;
-  
-    // Function to fetch 3D files from the API
-    async function fetchFiles() {
-        isLoading = true;
-        error = null;
+    let loggedInUserId: number | null = null; // Logged-in user ID
+    let expandedList: string | null = null; // Tracks which list is expanded
 
-        try {
-            const response = await fetch(`http://127.0.0.1:8000/api/3d-files/?search=${searchQuery}`);
-            if (!response.ok) {
-                throw new Error("Failed to fetch 3D files");
-            }
-            files = await response.json();
-        } catch (err) {
-            error = err.message;
-        } finally {
-            isLoading = false;
-        }
-    }
+</script>
   
-    // Fetch files when the component mounts
-    onMount(() => {
-      fetchFiles();
-    });
-  
-    // Fetch files whenever the search query changes
-    $: if (searchQuery !== undefined) {
-        fetchFiles();
-    }
-
-    function selectFile(file) {
-        selectedFile = file;
-        selectedFileEntityId.set(file.entity);
-    }
-  </script>
-  
-  <div class="container">
+<div class="container">
+    <h2>Library</h2>
   
     <!-- Search Input -->
     <input
       type="text"
       bind:value={searchQuery}
-      placeholder="Search 3D files..."
+      placeholder="Search your library..."
       class="search-box"
     />
   
@@ -58,25 +29,14 @@
     {:else if error}
       <div class="error">{error}</div>
     {:else}
-      <!-- File List -->
+      <!-- Lists -->
       <div class="file-list">
-        {#each files as file}
-          <div 
-            class="file-item {selectedFile === file ? 'selected': ''}"
-            on:click={() => selectFile(file)}
-            >
-            <div class="file-name">{file.three_d_file_name}</div>
-            <div class="file-description">{file.three_d_file_description}</div>
-            <div>Added by: {file.username_added}</div>
-            <div>Filename: {file.filename}</div>
-          </div>
-        {/each}
+        <div class="file-item">Likes</div>
       </div>
     {/if}
-  </div>
+</div>
 
-
-  <style>
+<style>
     .container {
       max-width: 600px;
       margin: 0 auto;
@@ -93,17 +53,48 @@
       border-radius: 4px;
     }
   
-    .file-list {
+    .lists {
       max-height: 350px;
       overflow-y: auto;
       border: 1px solid #ccc;
       border-radius: 4px;
       padding: 10px;
     }
+
+    .list-item {
+      margin-bottom: 10px;
+    }
+
+    .list-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      background-color: #f0f0f0;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .list-header:hover {
+      background-color: #e0e0e0;
+    }
+
+    .toggle-icon {
+      font-size: 14px;
+    }
+
+    .file-list {
+        max-height: 350px;
+        overflow-y: auto;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 10px;
+    }
   
     .file-item {
       padding: 10px;
       border-bottom: 1px solid #eee;
+      cursor: pointer;
     }
   
     .file-item:last-child {
@@ -134,4 +125,4 @@
         background-color: #f0f0f0;
         border-left: 5px solid #007bff;
     }
-  </style>
+</style>
