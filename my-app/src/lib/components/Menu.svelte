@@ -1,9 +1,11 @@
 <script>
+    import Search from '../components/MenuComponents/Search.svelte'
     export let isOpen = false;
 </script>
 
 <div class="menu {isOpen ? 'open' : ''}">
 
+    <Search />
 
     <!-- Buttons at the bottom of the menu -->
     <div class="buttons">
@@ -28,15 +30,15 @@
     }
 
     .menu.open {
-        width: 350px;
+        width: 400px;
     }
 
     .buttons {
         margin-top: auto; /* Push buttons to the bottom */
-        padding: 10px;
+        padding: 20px;
         display: flex;
         flex-direction: row;
-        gap: 7px; /* Space between buttons */
+        gap: 10px; /* Space between buttons */
     }
 
     .buttons button {
