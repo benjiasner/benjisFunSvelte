@@ -1,6 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { selectedFileEntityId } from "../../stores";
+    import ThreeDFileInfo from "./ThreeDFileInfo.svelte"
     
     let searchQuery = ""; // Holds the search input value
     let files = []; // Holds the list of 3D files
@@ -8,6 +9,22 @@
     let error = null; // Error state
     let selectedFile = null;
     let loggedInUserId = null; // Replace this with the actual logged-in user ID
+
+    let showPopup = false;
+    let popupFile = null;
+
+    // Function to open the pop-up
+    function openPopup(file) {
+        popupFile = file;
+        showPopup = true;
+        console.log(file);
+    }
+
+    // Function to close the pop-up
+    function closePopup() {
+        showPopup = false;
+        popupFile = null;
+    }
 
     // Function to fetch 3D files from the API
     async function fetchFiles() {
@@ -122,6 +139,9 @@
         selectedFile = file;
         selectedFileEntityId.set(file.entity);
     }
+    function toggleInfo() {
+        console.log("clicked")
+    }
 </script>
 
 <div class="container">
@@ -158,10 +178,19 @@
                     🤍 <!-- Gray heart for not liked -->
                 {/if}
             </div>
+            <div class="more-info" on:click|stopPropagation={() => openPopup(file)}>
+                ...
+            </div>  
           </div>
         {/each}
       </div>
     {/if}
+
+    <!-- Pop-up -->
+    {#if showPopup && popupFile}
+        <ThreeDFileInfo file={popupFile} closePopup={closePopup} />
+    {/if}
+
 </div>
 
 <style>
@@ -225,6 +254,14 @@
   }
 
   .heart-icon {
+    position: absolute;
+    top: 10px;
+    right: 35px;
+    cursor: pointer;
+    font-size: 20px;
+  }
+
+  .more-info {
     position: absolute;
     top: 10px;
     right: 10px;
