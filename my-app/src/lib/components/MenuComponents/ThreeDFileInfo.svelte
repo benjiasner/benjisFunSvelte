@@ -12,6 +12,55 @@
     let isLoadingStreams = false; // Loading state for streams
     let errorStreams: string | null = null; // Error state for streams
 
+    let totalDownloads: number | null = null; // Total downloads for the file
+    let isLoadingDownloads = false; // Loading state for downloads
+    let errorDownloads: string | null = null; // Error state for downloads
+
+    // Function to fetch total downloads for the file
+    async function fetchTotalDownloads(fileId: number) {
+        isLoadingDownloads = true;
+        errorDownloads = null;
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/api/total-downloads/${fileId}/`);
+            if (!response.ok) {
+                throw new Error("Failed to fetch total downloads");
+            }
+            const data = await response.json();
+            totalDownloads = data.total_downloads;
+        } catch (err) {
+            console.error("Error fetching total downloads:", err);
+            errorDownloads = err.message;
+        } finally {
+            isLoadingDownloads = false;
+        }
+    }
+
+    // Function to handle file download
+    async function downloadFile(fileId: number, filename: string) {
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/api/download-file/${fileId}/`);
+            if (!response.ok) {
+                throw new Error("Failed to download file");
+            }
+
+            // Convert the response to a Blob
+            const blob = await response.blob();
+
+            // Create a temporary link element to trigger the download
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = filename; // Set the filename for the download
+            document.body.appendChild(a);
+            a.click(); // Trigger the download
+            document.body.removeChild(a); // Clean up
+            window.URL.revokeObjectURL(url); // Release the object URL
+        } catch (err) {
+            console.error("Error downloading file:", err);
+            alert("Failed to download file. Please try again.");
+        }
+    }
+
     // Fetch total likes and streams when the component mounts
     onMount(async () => {
         if (file?.entity) {
@@ -19,6 +68,7 @@
         }
         if (file?.id) {
             await fetchTotalStreams(file.id);
+            await fetchTotalDownloads(file.id);
         }
     });
 
@@ -88,7 +138,20 @@
                     <span>{totalStreams}</span>
                 {/if}
             </p>
-            <p><strong>Download:</strong></p>
+            <p><strong>Downloads:</strong>
+                {#if isLoadingDownloads}
+                    <span>Loading...</span>
+                {:else if errorDownloads}
+                    <span class="error">Error: {errorDownloads}</span>
+                {:else}
+                    <span>{totalDownloads}</span>
+                {/if}
+            </p>
+            <p><strong>Download:</strong>
+                <button on:click|stopPropagation={() => downloadFile(file.id, file.filename)}>
+                    Download File
+                </button>
+            </p>
         {:else}
             <p>No file data available.</p>
         {/if}
