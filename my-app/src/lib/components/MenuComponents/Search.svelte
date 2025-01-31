@@ -7,30 +7,114 @@
     let isLoading = false; // Loading state
     let error = null; // Error state
     let selectedFile = null;
-    
+    let loggedInUserId = null; // Replace this with the actual logged-in user ID
+
     // Function to fetch 3D files from the API
     async function fetchFiles() {
         isLoading = true;
         error = null;
         try {
             const response = await fetch(`http://127.0.0.1:8000/api/3d-files/?search=${searchQuery}`);
-            if (!response.ok) {
-                throw new Error("Failed to fetch 3D files");
-            }
-            files = await response.json();
+            if (!response.ok) throw new Error("Failed to fetch 3D files");
+            
+            // Create NEW array with fresh objects
+            const newFiles = await response.json();
+            
+            // Add liked status to NEW objects
+            await Promise.all(newFiles.map(async (file) => {
+                file.liked = await checkLikeStatus(file.entity, loggedInUserId);
+            }));
+            
+            // Replace entire array to trigger reactivity
+            files = newFiles;
         } catch (err) {
             error = err.message;
         } finally {
             isLoading = false;
         }
     }
+
+    // Function to check if a file is liked by the logged-in user
+    async function checkLikeStatus(entityId: number, userId: number): Promise<boolean> {
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/api/check-like/${entityId}/${userId}/`);
+            if (!response.ok) {
+                throw new Error("Failed to fetch like status");
+            }
+            const data = await response.json();
+            return data.is_liked;
+        } catch (err) {
+            console.error("Error checking like status:", err);
+            return false;
+        }
+    }
+
+    // Function to like an entity
+    async function likeEntity(entityId: number, userId: number) {
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/api/like/${entityId}/${userId}/`, {
+                method: 'POST',
+            });
+            if (!response.ok) {
+                throw new Error("Failed to like entity");
+            }
+            return true;
+        } catch (err) {
+            console.error("Error liking entity:", err);
+            return false;
+        }
+    }
+
+    // Function to unlike an entity
+    async function unlikeEntity(entityId: number, userId: number) {
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/api/unlike/${entityId}/${userId}/`, {
+                method: 'POST',
+            });
+            if (!response.ok) {
+                throw new Error("Failed to unlike entity");
+            }
+            return true;
+        } catch (err) {
+            console.error("Error unliking entity:", err);
+            return false;
+        }
+    }
+
+    // Function to handle heart icon click
+    async function toggleLike(file) {
+        if (file.liked) {
+            const success = await unlikeEntity(file.entity, loggedInUserId);
+            if (success) {
+                file.liked = false;
+            }
+        } else {
+            const success = await likeEntity(file.entity, loggedInUserId);
+            if (success) {
+                file.liked = true;
+            }
+        }
+        files = files;
+    }
+
     // Fetch files when the component mounts
-    onMount(() => {
-        fetchFiles();
+
+    onMount(async () => {
+        const endpoint = 'http://localhost:8000/api/user/';
+        const response = await fetch(endpoint, {
+            headers: {'Content-Type': 'application/json'},
+            credentials: 'include',
+        });
+
+        const content = await response.json();
+        // console.log(content);
+        loggedInUserId = content.id;
+        console.log(loggedInUserId);
+        await fetchFiles();
     });
 
     // Fetch files whenever the search query changes
-    $: if (searchQuery !== undefined) {
+    $: if (searchQuery !== undefined && loggedInUserId !== null) {
         fetchFiles();
     }
 
@@ -41,7 +125,6 @@
 </script>
 
 <div class="container">
-
     <!-- Search Input -->
     <input
       type="text"
@@ -68,6 +151,13 @@
             <div>Added by: {file.username_added}</div>
             <div>Filename: {file.filename}</div>
             <!-- Heart Icon -->
+            <div class="heart-icon" on:click|stopPropagation={() => toggleLike(file)}>
+                {#if file.liked}
+                    ❤️ <!-- Red heart for liked -->
+                {:else}
+                    🤍 <!-- Gray heart for not liked -->
+                {/if}
+            </div>
           </div>
         {/each}
       </div>
@@ -102,6 +192,8 @@
   .file-item {
     padding: 10px;
     border-bottom: 1px solid #eee;
+    cursor: pointer;
+    position: relative;
   }
 
   .file-item:last-child {
@@ -130,5 +222,13 @@
   .file-item.selected {
     background-color: #f0f0f0;
     border-left: 5px solid #007bff;
+  }
+
+  .heart-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 20px;
   }
 </style>
