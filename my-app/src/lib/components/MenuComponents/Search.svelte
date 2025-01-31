@@ -135,13 +135,45 @@
         fetchFiles();
     }
 
+    // Function to log a stream when a file is selected
+    async function logStream(fileId: number) {
+        try {
+            const body = {
+                three_d_file: fileId,
+            };
+
+            // Include user_id only if loggedInUserId is not null
+            if (loggedInUserId !== null) {
+                body.user_id = loggedInUserId;
+            }
+
+            const response = await fetch('http://127.0.0.1:8000/api/streams/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(body),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to log stream");
+            }
+
+            const data = await response.json();
+            //console.log("Stream logged:", data);
+        } catch (err) {
+            console.error("Error logging stream:", err);
+        }
+    }
+
     function selectFile(file) {
         selectedFile = file;
         selectedFileEntityId.set(file.entity);
+
+        // Log a stream when a file is selected
+        logStream(file.id);
     }
-    function toggleInfo() {
-        console.log("clicked")
-    }
+
 </script>
 
 <div class="container">

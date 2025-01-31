@@ -8,10 +8,17 @@
     let isLoadingLikes = false; // Loading state for likes
     let errorLikes: string | null = null; // Error state for likes
 
-    // Fetch total likes when the component mounts
+    let totalStreams: number | null = null; // Total streams for the file
+    let isLoadingStreams = false; // Loading state for streams
+    let errorStreams: string | null = null; // Error state for streams
+
+    // Fetch total likes and streams when the component mounts
     onMount(async () => {
         if (file?.entity) {
             await fetchTotalLikes(file.entity);
+        }
+        if (file?.id) {
+            await fetchTotalStreams(file.id);
         }
     });
 
@@ -31,6 +38,25 @@
             errorLikes = err.message;
         } finally {
             isLoadingLikes = false;
+        }
+    }
+
+    // Function to fetch total streams for the file
+    async function fetchTotalStreams(fileId: number) {
+        isLoadingStreams = true;
+        errorStreams = null;
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/api/total-streams/${fileId}/`);
+            if (!response.ok) {
+                throw new Error("Failed to fetch total streams");
+            }
+            const data = await response.json();
+            totalStreams = data.total_streams;
+        } catch (err) {
+            console.error("Error fetching total streams:", err);
+            errorStreams = err.message;
+        } finally {
+            isLoadingStreams = false;
         }
     }
 </script>
@@ -53,7 +79,15 @@
                     <span>{totalLikes}</span>
                 {/if}
             </p>
-            <p><strong>Streams:</strong></p>
+            <p><strong>Streams:</strong>
+                {#if isLoadingStreams}
+                    <span>Loading...</span>
+                {:else if errorStreams}
+                    <span class="error">Error: {errorStreams}</span>
+                {:else}
+                    <span>{totalStreams}</span>
+                {/if}
+            </p>
             <p><strong>Download:</strong></p>
         {:else}
             <p>No file data available.</p>
