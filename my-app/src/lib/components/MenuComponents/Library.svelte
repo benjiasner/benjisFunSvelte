@@ -22,6 +22,43 @@
         view = 'create'
         console.log("yeet2")
     }
+
+        // Fetch playlists for the logged-in user
+        async function fetchPlaylists(userId: number) {
+        isLoading = true;
+        error = null;
+        try {
+            const response = await fetch(`http://localhost:8000/api/user-playlists/${userId}/`);
+            if (!response.ok) {
+                throw new Error("Failed to fetch playlists");
+            }
+            const data = await response.json();
+            lists = data; // Update the lists array with the fetched playlists
+        } catch (err) {
+            error = err.message;
+        } finally {
+            isLoading = false;
+        }
+    }
+
+    onMount(async () => {
+        // Fetch the logged-in user's ID
+        const endpoint = 'http://localhost:8000/api/user/';
+        const response = await fetch(endpoint, {
+            headers: {'Content-Type': 'application/json'},
+            credentials: 'include',
+        });
+
+        const content = await response.json();
+        console.log(content);
+        loggedInUserId = content.id;
+        console.log(loggedInUserId);
+
+        // Fetch playlists for the logged-in user
+        if (loggedInUserId) {
+            await fetchPlaylists(loggedInUserId);
+        }
+    });
 </script>
   
 <div class="container">
@@ -48,6 +85,11 @@
         <!-- Lists -->
         <div class="file-list">
             <div class="file-item" on:click|preventDefault={likesListChosen}>Likes</div>
+            {#each lists as playlist}
+                <div class="file-item">
+                    <div class="file-name">{playlist.name}</div>
+                </div>
+            {/each}
         </div>
         {/if}
     {:else if view === 'likes'}
@@ -113,11 +155,18 @@
     }
   
     .file-item {
-      padding: 10px;
-      border-bottom: 1px solid #eee;
-      cursor: pointer;
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
-  
+
+    .file-item:hover {
+        background-color: #f0f0f0;
+    }
+
     .file-item:last-child {
       border-bottom: none;
     }
