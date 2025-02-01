@@ -3,6 +3,7 @@
     import { selectedFileEntityId } from "../../stores";
     import LikesList from "./MenuSubComponents/LikesList.svelte"
     import CreatePlaylist from "./MenuSubComponents/CreatePlaylist.svelte"
+    import PlaylistView from "./MenuSubComponents/PlaylistView.svelte"
   
     let searchQuery = ""; // Holds the search input value
     let lists = []; // Holds the list of lists (e.g., "Likes")
@@ -12,6 +13,8 @@
     let loggedInUserId: number | null = null; // Logged-in user ID
     let expandedList: string | null = null; // Tracks which list is expanded
     let view = 'main';
+    let selectedPlaylistId: number | null = null;
+    let selectedPlaylistName: string | null = null;
 
     function likesListChosen() {
         view = 'likes'
@@ -23,8 +26,17 @@
         console.log("yeet2")
     }
 
+    function playlistChosen(playlistId: number, playlistName: string) {
+        console.log("Playlist chosen:", playlistId); // Debugging
+        view = 'playlist';
+        selectedPlaylistId = playlistId;
+        selectedPlaylistName = playlistName;
+        console.log("View:", view); // Debugging
+        console.log("Selected Playlist ID:", selectedPlaylistId); // Debugging
+    }
+
         // Fetch playlists for the logged-in user
-        async function fetchPlaylists(userId: number) {
+    async function fetchPlaylists(userId: number) {
         isLoading = true;
         error = null;
         try {
@@ -34,6 +46,7 @@
             }
             const data = await response.json();
             lists = data; // Update the lists array with the fetched playlists
+            console.log(lists)
         } catch (err) {
             error = err.message;
         } finally {
@@ -86,7 +99,7 @@
         <div class="file-list">
             <div class="file-item" on:click|preventDefault={likesListChosen}>Likes</div>
             {#each lists as playlist}
-                <div class="file-item">
+                <div class="file-item" on:click|preventDefault={() => playlistChosen(playlist.entity, playlist.name)}>
                     <div class="file-name">{playlist.name}</div>
                 </div>
             {/each}
@@ -96,6 +109,8 @@
         <LikesList />
     {:else if view === 'create'}
         <CreatePlaylist />
+    {:else if view === 'playlist' && selectedPlaylistId}
+        <PlaylistView playlistId={selectedPlaylistId} playlistName={selectedPlaylistName}/>
     {/if}
 </div>
 
