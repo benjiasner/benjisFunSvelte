@@ -1,6 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { selectedFileEntityId } from "../../stores";
+    import LikesList from "./MenuSubComponents/LikesList.svelte"
   
     let searchQuery = ""; // Holds the search input value
     let lists = []; // Holds the list of lists (e.g., "Likes")
@@ -9,30 +10,39 @@
     let selectedFile = null;
     let loggedInUserId: number | null = null; // Logged-in user ID
     let expandedList: string | null = null; // Tracks which list is expanded
+    let playlistChosen = null;
 
+    function likesListChosen() {
+        playlistChosen = 'playlist'
+        console.log("yeet")
+    }
 </script>
   
 <div class="container">
-    <h2>Library</h2>
-  
-    <!-- Search Input -->
-    <input
-      type="text"
-      bind:value={searchQuery}
-      placeholder="Search your library..."
-      class="search-box"
-    />
-  
-    <!-- Loading State -->
-    {#if isLoading}
-      <div class="loading">Loading...</div>
-    {:else if error}
-      <div class="error">{error}</div>
-    {:else}
-      <!-- Lists -->
-      <div class="file-list">
-        <div class="file-item">Likes</div>
-      </div>
+    {#if !playlistChosen}
+        <h2>Library</h2>
+    
+        <!-- Search Input -->
+        <input
+        type="text"
+        bind:value={searchQuery}
+        placeholder="Search your library..."
+        class="search-box"
+        />
+    
+        <!-- Loading State -->
+        {#if isLoading}
+        <div class="loading">Loading...</div>
+        {:else if error}
+        <div class="error">{error}</div>
+        {:else}
+        <!-- Lists -->
+        <div class="file-list">
+            <div class="file-item" on:click|preventDefault={likesListChosen}>Likes</div>
+        </div>
+        {/if}
+    {:else if playlistChosen === 'playlist'}
+        <LikesList />
     {/if}
 </div>
 
