@@ -205,7 +205,7 @@
     }
 
     .file-list {
-      max-height: 350px;
+      max-height: 250px;
       overflow-y: auto;
       border: 1px solid #ccc;
       border-radius: 4px;
