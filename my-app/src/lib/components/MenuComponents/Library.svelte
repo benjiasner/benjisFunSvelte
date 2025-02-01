@@ -6,7 +6,8 @@
     import PlaylistView from "./MenuSubComponents/PlaylistView.svelte"
   
     let searchQuery = ""; // Holds the search input value
-    let lists = []; // Holds the list of lists (e.g., "Likes")
+    let lists = []; // Holds the list of playlists
+    let filteredLists = []; // Holds the filtered list of playlists
     let isLoading = false; // Loading state
     let error = null; // Error state
     let selectedFile = null;
@@ -35,23 +36,40 @@
         console.log("Selected Playlist ID:", selectedPlaylistId); // Debugging
     }
 
-        // Fetch playlists for the logged-in user
+    // Fetch playlists for the logged-in user
     async function fetchPlaylists(userId: number) {
         isLoading = true;
         error = null;
         try {
-            const response = await fetch(`http://localhost:8000/api/user-playlists/${userId}/`);
+            const response = await fetch(`http://localhost:8000/api/user-playlists/${userId}/?search=${searchQuery}`);
             if (!response.ok) {
                 throw new Error("Failed to fetch playlists");
             }
             const data = await response.json();
             lists = data; // Update the lists array with the fetched playlists
+            filterPlaylists(); // Filter playlists based on the search query
             console.log(lists)
         } catch (err) {
             error = err.message;
         } finally {
             isLoading = false;
         }
+    }
+
+    // Filter playlists based on the search query
+    function filterPlaylists() {
+        if (searchQuery) {
+            filteredLists = lists.filter((playlist) =>
+                playlist.name.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+        } else {
+            filteredLists = lists; // Show all playlists if no search query
+        }
+    }
+
+    // Fetch playlists when the search query changes
+    $: if (searchQuery !== undefined && loggedInUserId !== null) {
+        fetchPlaylists(loggedInUserId);
     }
 
     onMount(async () => {
@@ -98,7 +116,7 @@
         <!-- Lists -->
         <div class="file-list">
             <div class="file-item" on:click|preventDefault={likesListChosen}>Likes</div>
-            {#each lists as playlist}
+            {#each filteredLists as playlist}
                 <div class="file-item" on:click|preventDefault={() => playlistChosen(playlist.entity, playlist.name)}>
                     <div class="file-name">{playlist.name}</div>
                 </div>

@@ -6,9 +6,10 @@
     export let playlistName: string;
 
     let playlistFiles = []; // Holds the list of files in the playlist
+    let allFiles = []; // Holds the list of all files
     let isLoading = false; // Loading state
     let error = null; // Error state
-    let selectedFile = null;
+    let loggedInUserId: number | null = null; // Logged-in user ID
 
     // Fetch the files in the playlist
     async function fetchPlaylistFiles() {
@@ -21,6 +22,24 @@
             }
             const data = await response.json();
             playlistFiles = data;
+        } catch (err) {
+            error = err.message;
+        } finally {
+            isLoading = false;
+        }
+    }
+
+    // Fetch all files from the API
+    async function fetchAllFiles() {
+        isLoading = true;
+        error = null;
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/api/3d-files/`);
+            if (!response.ok) {
+                throw new Error("Failed to fetch all files");
+            }
+            const data = await response.json();
+            allFiles = data;
         } catch (err) {
             error = err.message;
         } finally {
@@ -50,10 +69,27 @@
         }
     }
 
-    // Fetch playlist files when the component mounts
+    // Function to handle file selection
+    function selectFile(file) {
+        selectedFileEntityId.set(file.entity); // Update the store with the selected file's entity ID
+    }
+
+    // Fetch playlist files and all files when the component mounts
     onMount(async () => {
-        console.log('we iinnit')
+        console.log('we iinnit');
         await fetchPlaylistFiles();
+        await fetchAllFiles();
+
+        // Fetch the logged-in user's ID
+        const endpoint = 'http://localhost:8000/api/user/';
+        const response = await fetch(endpoint, {
+            headers: {'Content-Type': 'application/json'},
+            credentials: 'include',
+        });
+
+        const content = await response.json();
+        loggedInUserId = content.id;
+        console.log(loggedInUserId);
     });
 </script>
 
@@ -66,22 +102,24 @@
     {:else if error}
         <div class="error">{error}</div>
     {:else}
-        <!-- Add File Section -->
-        <div class="add-file-section">
-            <input
-                type="text"
-                placeholder="Search files to add..."
-                class="search-box"
-            />
-            <!-- Display search results here -->
-        </div>
-
         <!-- Playlist Files -->
         <div class="file-list">
             {#each playlistFiles as file}
-                <div class="file-item">
+                <div class="file-item" on:click={() => selectFile(file)}>
                     <div class="file-name">{file.three_d_file_name}</div>
                     <div class="file-description">{file.three_d_file_description}</div>
+                </div>
+            {/each}
+        </div>
+
+        <!-- All Files -->
+        <h4>Add to playlist</h4>
+        <div class="file-list">
+            {#each allFiles as file}
+                <div class="file-item" on:click={() => selectFile(file)}>
+                    <div class="file-name">{file.three_d_file_name}</div>
+                    <div class="file-description">{file.three_d_file_description}</div>
+                    <button on:click|preventDefault={() => addFileToPlaylist(file.id)}>+</button>
                 </div>
             {/each}
         </div>
@@ -96,30 +134,22 @@
         font-family: Arial, sans-serif;
     }
 
-    .add-file-section {
-        margin-bottom: 20px;
-    }
-
-    .search-box {
-        width: 100%;
-        padding: 10px;
-        font-size: 16px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-    }
-
     .file-list {
-        max-height: 350px;
+        max-height: 120px;
         overflow-y: auto;
         border: 1px solid #ccc;
         border-radius: 4px;
         padding: 10px;
+        margin-bottom: 20px;
     }
 
     .file-item {
         padding: 10px;
         border-bottom: 1px solid #eee;
         cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 
     .file-item:last-child {
@@ -143,5 +173,18 @@
     .error {
         color: red;
         text-align: center;
+    }
+
+    button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #0056b3;
     }
 </style>
