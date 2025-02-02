@@ -16,7 +16,7 @@
         isLoading = true;
         error = null;
         try {
-            const response = await fetch(`http://localhost:8000/api/playlists/${playlistId}/files/`);
+            const response = await fetch(`https://benjisfunbackend.onrender.com/api/playlists/${playlistId}/files/`);
             if (!response.ok) {
                 throw new Error("Failed to fetch playlist files");
             }
@@ -50,7 +50,7 @@
     // Add a file to the playlist
     async function addFileToPlaylist(fileId: number) {
         try {
-            const response = await fetch(`http://localhost:8000/api/playlists/${playlistId}/add-file/`, {
+            const response = await fetch(`https://benjisfunbackend.onrender.com/api/playlists/${playlistId}/add-file/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -81,7 +81,7 @@
         await fetchAllFiles();
 
         // Fetch the logged-in user's ID
-        const endpoint = 'http://localhost:8000/api/user/';
+        const endpoint = 'https://benjisfunbackend.onrender.com/api/user/';
         const response = await fetch(endpoint, {
             headers: {'Content-Type': 'application/json'},
             credentials: 'include',

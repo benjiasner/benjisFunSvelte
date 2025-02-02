@@ -104,7 +104,7 @@
     // Fetch the logged-in user's ID and liked files when the component mounts
     onMount(async () => {
         // Fetch the logged-in user's ID
-        const userResponse = await fetch('http://localhost:8000/api/user/', {
+        const userResponse = await fetch('https://benjisfunbackend.onrender.com/api/user/', {
             headers: {'Content-Type': 'application/json'},
             credentials: 'include',
         });

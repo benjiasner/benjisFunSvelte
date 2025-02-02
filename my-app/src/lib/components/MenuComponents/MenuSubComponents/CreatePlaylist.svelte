@@ -10,7 +10,7 @@
 
     async function createPlaylist(playlistName) {
 
-        const response = await fetch('http://localhost:8000/api/create-playlist/', {
+        const response = await fetch('https://benjisfunbackend.onrender.com/api/create-playlist/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -53,7 +53,7 @@
     }
 
     onMount(async () => {
-        const endpoint = 'http://localhost:8000/api/user/';
+        const endpoint = 'https://benjisfunbackend.onrender.com/api/user/';
         const response = await fetch(endpoint, {
             headers: {'Content-Type': 'application/json'},
             credentials: 'include',

@@ -5,7 +5,7 @@
     let username = ''
 
     const logout = async () => {
-        const endpoint = 'http://localhost:8000/api/logout/';
+        const endpoint = 'https://benjisfunbackend.onrender.com/api/logout/';
         const response = await fetch(endpoint, {
             method: "POST",
             headers: {'Content-Type': 'application/json'},
@@ -18,7 +18,7 @@
     }
 
     onMount(async () => {
-        const endpoint = 'http://localhost:8000/api/user/';
+        const endpoint = 'https://benjisfunbackend.onrender.com/api/user/';
         const response = await fetch(endpoint, {
             headers: {'Content-Type': 'application/json'},
             credentials: 'include',

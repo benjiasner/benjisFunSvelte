@@ -14,7 +14,7 @@
 
     $: if ($selectedFileEntityId) {
         const { load } = useLoader(STLLoader);
-        load(`http://localhost:8000/api/get-3d-file/${$selectedFileEntityId}`).then(loadedModel => {
+        load(`https://benjisfunbackend.onrender.com/api/get-3d-file/${$selectedFileEntityId}`).then(loadedModel => {
             model = loadedModel;
         }).catch(error => {
             console.error(`Failed to load model: /${$selectedFileEntityId}`, error);

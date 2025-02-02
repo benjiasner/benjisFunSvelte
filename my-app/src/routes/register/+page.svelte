@@ -7,7 +7,7 @@
     let successMessage = '';
 
     let signUp = () => {
-        const endpoint = 'http://localhost:8000/api/register/';
+        const endpoint = 'https://benjisfunbackend.onrender.com/api/register/';
         const requestOptions = {
             method: "POST",
             headers: {'Content-Type': 'application/json'},

@@ -3,7 +3,7 @@
 
     let username = ''
     onMount(async () => {
-        const endpoint = 'http://localhost:8000/api/user/';
+        const endpoint = 'https://benjisfunbackend.onrender.com/api/user/';
         const response = await fetch(endpoint, {
             headers: {'Content-Type': 'application/json'},
             credentials: 'include',

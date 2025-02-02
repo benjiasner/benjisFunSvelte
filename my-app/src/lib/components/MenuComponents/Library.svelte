@@ -41,7 +41,7 @@
         isLoading = true;
         error = null;
         try {
-            const response = await fetch(`http://localhost:8000/api/user-playlists/${userId}/?search=${searchQuery}`);
+            const response = await fetch(`https://benjisfunbackend.onrender.com/api/user-playlists/${userId}/?search=${searchQuery}`);
             if (!response.ok) {
                 throw new Error("Failed to fetch playlists");
             }
@@ -74,7 +74,7 @@
 
     onMount(async () => {
         // Fetch the logged-in user's ID
-        const endpoint = 'http://localhost:8000/api/user/';
+        const endpoint = 'https://benjisfunbackend.onrender.com/api/user/';
         const response = await fetch(endpoint, {
             headers: {'Content-Type': 'application/json'},
             credentials: 'include',
