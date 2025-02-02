@@ -34,7 +34,7 @@
         isLoading = true;
         error = null;
         try {
-            const response = await fetch(`http://127.0.0.1:8000/api/3d-files/`);
+            const response = await fetch(`https://benjisfunbackend.onrender.com/api/3d-files/`);
             if (!response.ok) {
                 throw new Error("Failed to fetch all files");
             }

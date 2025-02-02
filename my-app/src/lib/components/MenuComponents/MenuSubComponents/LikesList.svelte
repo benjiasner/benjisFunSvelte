@@ -31,7 +31,7 @@
     // Function to fetch file data by entity ID
     async function fetchFileData(entityId: number): Promise<any> {
         try {
-            const response = await fetch(`http://127.0.0.1:8000/api/entities/${entityId}/`);
+            const response = await fetch(`https://benjisfunbackend.onrender.com/api/entities/${entityId}/`);
             if (!response.ok) {
                 throw new Error(`Failed to fetch file data for entity ID ${entityId}`);
             }
@@ -48,7 +48,7 @@
         error = null;
         try {
             // Fetch the user's liked entities
-            const response = await fetch(`http://127.0.0.1:8000/api/user-liked-entities/${loggedInUserId}/`);
+            const response = await fetch(`https://benjisfunbackend.onrender.com/api/user-liked-entities/${loggedInUserId}/`);
             if (!response.ok) {
                 throw new Error("Failed to fetch liked entities");
             }
@@ -81,7 +81,7 @@
     // Function to toggle like/unlike a file
     async function toggleLike(file: any) {
         try {
-            const response = await fetch(`http://127.0.0.1:8000/api/toggle-like/${file.entity_id}/`, {
+            const response = await fetch(`https://benjisfunbackend.onrender.com/api/toggle-like/${file.entity_id}/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

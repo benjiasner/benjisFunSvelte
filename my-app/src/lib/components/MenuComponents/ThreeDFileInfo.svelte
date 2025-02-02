@@ -21,7 +21,7 @@
         isLoadingDownloads = true;
         errorDownloads = null;
         try {
-            const response = await fetch(`http://127.0.0.1:8000/api/total-downloads/${fileId}/`);
+            const response = await fetch(`https://benjisfunbackend.onrender.com/api/total-downloads/${fileId}/`);
             if (!response.ok) {
                 throw new Error("Failed to fetch total downloads");
             }
@@ -38,7 +38,7 @@
     // Function to handle file download
     async function downloadFile(fileId: number, filename: string) {
         try {
-            const response = await fetch(`http://127.0.0.1:8000/api/download-file/${fileId}/`);
+            const response = await fetch(`https://benjisfunbackend.onrender.com/api/download-file/${fileId}/`);
             if (!response.ok) {
                 throw new Error("Failed to download file");
             }
@@ -77,7 +77,7 @@
         isLoadingLikes = true;
         errorLikes = null;
         try {
-            const response = await fetch(`http://127.0.0.1:8000/api/total-likes/${entityId}/`);
+            const response = await fetch(`https://benjisfunbackend.onrender.com/api/total-likes/${entityId}/`);
             if (!response.ok) {
                 throw new Error("Failed to fetch total likes");
             }
@@ -96,7 +96,7 @@
         isLoadingStreams = true;
         errorStreams = null;
         try {
-            const response = await fetch(`http://127.0.0.1:8000/api/total-streams/${fileId}/`);
+            const response = await fetch(`https://benjisfunbackend.onrender.com/api/total-streams/${fileId}/`);
             if (!response.ok) {
                 throw new Error("Failed to fetch total streams");
             }

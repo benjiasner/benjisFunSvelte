@@ -31,7 +31,7 @@
         isLoading = true;
         error = null;
         try {
-            const response = await fetch(`http://127.0.0.1:8000/api/3d-files/?search=${searchQuery}`);
+            const response = await fetch(`https://benjisfunbackend.onrender.com/api/3d-files/?search=${searchQuery}`);
             if (!response.ok) throw new Error("Failed to fetch 3D files");
             
             // Create NEW array with fresh objects
@@ -54,7 +54,7 @@
     // Function to check if a file is liked by the logged-in user
     async function checkLikeStatus(entityId: number, userId: number): Promise<boolean> {
         try {
-            const response = await fetch(`http://127.0.0.1:8000/api/check-like/${entityId}/${userId}/`);
+            const response = await fetch(`https://benjisfunbackend.onrender.com/api/check-like/${entityId}/${userId}/`);
             if (!response.ok) {
                 throw new Error("Failed to fetch like status");
             }
@@ -69,7 +69,7 @@
     // Function to like an entity
     async function likeEntity(entityId: number, userId: number) {
         try {
-            const response = await fetch(`http://127.0.0.1:8000/api/like/${entityId}/${userId}/`, {
+            const response = await fetch(`https://benjisfunbackend.onrender.com/api/like/${entityId}/${userId}/`, {
                 method: 'POST',
             });
             if (!response.ok) {
@@ -85,7 +85,7 @@
     // Function to unlike an entity
     async function unlikeEntity(entityId: number, userId: number) {
         try {
-            const response = await fetch(`http://127.0.0.1:8000/api/unlike/${entityId}/${userId}/`, {
+            const response = await fetch(`https://benjisfunbackend.onrender.com/api/unlike/${entityId}/${userId}/`, {
                 method: 'POST',
             });
             if (!response.ok) {
@@ -147,7 +147,7 @@
                 body.user_id = loggedInUserId;
             }
 
-            const response = await fetch('http://127.0.0.1:8000/api/streams/', {
+            const response = await fetch('https://benjisfunbackend.onrender.com/api/streams/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
